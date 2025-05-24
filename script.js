@@ -1,6 +1,7 @@
 class ChimpishTranslator {
   constructor() {
     this.isEnglishToChimpish = true;
+    this.translationTimeout = null;
     this.initializeElements();
     this.bindEvents();
     this.updateUI();
@@ -9,7 +10,6 @@ class ChimpishTranslator {
   initializeElements() {
     this.sourceText = document.getElementById("source-text");
     this.targetText = document.getElementById("target-text");
-    this.translateBtn = document.getElementById("translate-btn");
     this.swapBtn = document.getElementById("swap-btn");
     this.clearBtn = document.getElementById("clear-btn");
     this.copyBtn = document.getElementById("copy-btn");
@@ -18,17 +18,12 @@ class ChimpishTranslator {
     this.chimpishBtn = document.getElementById("chimpish-btn");
     this.sourceLang = document.querySelector(".source-lang");
     this.targetLang = document.querySelector(".target-lang");
-    this.loadingSpinner = document.getElementById("loading-spinner");
   }
 
   bindEvents() {
     this.sourceText.addEventListener("input", () => {
       this.updateCharCount();
-      this.clearTranslation();
-    });
-
-    this.translateBtn.addEventListener("click", () => {
-      this.translateText();
+      this.scheduleAutoTranslation();
     });
 
     this.swapBtn.addEventListener("click", () => {
@@ -93,8 +88,30 @@ class ChimpishTranslator {
     this.clearTranslation();
   }
 
+  scheduleAutoTranslation() {
+    // Clear any existing timeout
+    if (this.translationTimeout) {
+      clearTimeout(this.translationTimeout);
+    }
+
+    // Check if there's text to translate
+    const text = this.sourceText.value.trim();
+    if (text) {
+      // Translate immediately (real-time)
+      this.translateText();
+    } else {
+      // Clear translation when input is empty
+      this.clearTranslation();
+    }
+  }
+
   swapLanguages() {
     this.isEnglishToChimpish = !this.isEnglishToChimpish;
+
+    // Cancel any pending auto-translation
+    if (this.translationTimeout) {
+      clearTimeout(this.translationTimeout);
+    }
 
     // Swap the text content
     const sourceValue = this.sourceText.value;
@@ -105,6 +122,11 @@ class ChimpishTranslator {
 
     this.updateUI();
     this.updateCharCount();
+
+    // Schedule auto-translation for the swapped content if there's text
+    if (this.sourceText.value.trim()) {
+      this.scheduleAutoTranslation();
+    }
 
     // Add animation class
     this.swapBtn.style.transform = "rotate(180deg) scale(1.1)";
@@ -118,6 +140,11 @@ class ChimpishTranslator {
     this.updateCharCount();
     this.clearTranslation();
     this.sourceText.focus();
+
+    // Cancel any pending auto-translation
+    if (this.translationTimeout) {
+      clearTimeout(this.translationTimeout);
+    }
   }
 
   clearTranslation() {
@@ -133,8 +160,6 @@ class ChimpishTranslator {
       return;
     }
 
-    this.setLoading(true);
-
     try {
       const mode = this.isEnglishToChimpish ? "encode" : "decode";
       const result = await this.callChimpishScript(text, mode);
@@ -149,8 +174,6 @@ class ChimpishTranslator {
       this.showError(
         "Connection error. Please make sure the server is running."
       );
-    } finally {
-      this.setLoading(false);
     }
   }
 
@@ -264,15 +287,6 @@ class ChimpishTranslator {
         success: false,
         error: error.message,
       };
-    }
-  }
-
-  setLoading(isLoading) {
-    this.translateBtn.disabled = isLoading;
-    if (isLoading) {
-      this.translateBtn.classList.add("loading");
-    } else {
-      this.translateBtn.classList.remove("loading");
     }
   }
 
