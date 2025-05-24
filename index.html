@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chimpish Translator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 class="logo">Chimpish Translate</h1>
+        <p class="subtitle">Translate between English and Chimpish</p>
+      </header>
+
+      <main class="translator">
+        <div class="language-selector">
+          <div class="language-pair">
+            <button class="language-btn active" id="english-btn">
+              <span class="language-code">EN</span>
+              <span class="language-name">English</span>
+            </button>
+
+            <button class="swap-btn" id="swap-btn" title="Swap languages">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M17 17l4-4-4-4" />
+                <path d="M3 7l4 4-4 4" />
+                <path d="M21 13H7" />
+                <path d="M3 11h14" />
+              </svg>
+            </button>
+
+            <button class="language-btn" id="chimpish-btn">
+              <span class="language-code">CH</span>
+              <span class="language-name">Chimpish</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="translation-area">
+          <div class="input-panel">
+            <div class="panel-header">
+              <span class="source-lang">English</span>
+              <button class="clear-btn" id="clear-btn" title="Clear text">
+                ×
+              </button>
+            </div>
+            <div class="text-container">
+              <textarea
+                class="text-input"
+                id="source-text"
+                placeholder="Enter text to translate..."
+                maxlength="5000"
+              ></textarea>
+              <div class="character-count">
+                <span id="char-count">0</span> / 5000
+              </div>
+            </div>
+          </div>
+
+          <div class="output-panel">
+            <div class="panel-header">
+              <span class="target-lang">Chimpish</span>
+              <div class="action-buttons">
+                <button class="copy-btn" id="copy-btn" title="Copy translation">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect
+                      x="9"
+                      y="9"
+                      width="13"
+                      height="13"
+                      rx="2"
+                      ry="2"
+                    ></rect>
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="text-container">
+              <div class="text-output" id="target-text">
+                <span class="placeholder">Translation will appear here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="translate-button-container">
+          <button class="translate-btn" id="translate-btn">
+            <span class="btn-text">Translate</span>
+            <div class="loading-spinner" id="loading-spinner"></div>
+          </button>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>Powered by Animal Testing</p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
