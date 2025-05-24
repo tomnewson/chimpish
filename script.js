@@ -23,6 +23,7 @@ class ChimpishTranslator {
   bindEvents() {
     this.sourceText.addEventListener("input", () => {
       this.updateCharCount();
+      this.autoResizeTextarea(); // Add auto-resize functionality
       this.scheduleAutoTranslation();
     });
 
@@ -122,6 +123,7 @@ class ChimpishTranslator {
 
     this.updateUI();
     this.updateCharCount();
+    this.autoResizeTextarea(); // Resize textarea after swapping content
 
     // Schedule auto-translation for the swapped content if there's text
     if (this.sourceText.value.trim()) {
@@ -138,6 +140,7 @@ class ChimpishTranslator {
   clearText() {
     this.sourceText.value = "";
     this.updateCharCount();
+    this.autoResizeTextarea(); // Reset textarea height when clearing
     this.clearTranslation();
     this.sourceText.focus();
 
@@ -326,6 +329,20 @@ class ChimpishTranslator {
       this.copyBtn.innerHTML = originalText;
       this.copyBtn.style.background = "";
     }, 2000);
+  }
+
+  // Add new method for auto-resizing textarea
+  autoResizeTextarea() {
+    const textarea = this.sourceText;
+
+    // Reset height to auto to get the correct scrollHeight
+    textarea.style.height = "auto";
+
+    // Set the height to the scroll height, but maintain minimum height
+    const minHeight = 60; // Two lines minimum (matching CSS)
+    const newHeight = Math.max(textarea.scrollHeight, minHeight);
+
+    textarea.style.height = newHeight + "px";
   }
 }
 
